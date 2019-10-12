@@ -1,53 +1,47 @@
 <template>
   <div id="register">
     <div class="a">
-      <img width="1000px" height="140px" src="../../assets/imgs/mu mu yun@2x.png" alt />
+      <img width="100%" height="200px" src="../../assets/imgs/mu mu yun@2x.png" alt />
       <div class="backdrop">
-        <div class="bb">
-        <el-form
-          :model="ruleForm"
-          :rules="rules"
-          ref="ruleForm"
-          class="demo-ruleForm"
-        >
-          <p style="width:280px; text-align: center;font-weight: 600">登录</p>
-          <el-form-item label prop="name">
-            <div class="import">
-              <img width="15px"  height="15px" style=" margin: 0 10px" src="../../assets/imgs/my.png" alt/>
-              <el-input v-model="ruleForm.name" placeholder="请输入您的用户名"></el-input>
-            </div>
-          </el-form-item>
-           <el-form-item label prop="phone">
-            <div class="import">
-              <img width="15px"  height="15px" style=" margin: 0 10px" src="../../assets/imgs/phone.png" alt/>
-              <el-input v-model="ruleForm.phone" placeholder="请输入手机号"></el-input>
-            </div>
-          </el-form-item>
-            <el-form-item label prop="verify">
-            <div class="import">
-              <img width="15px"  height="10px" style=" margin: 0 10px" src="../../assets/imgs/xinxi.png" alt/>              
-              <el-input v-model="ruleForm.verify" placeholder="请输入短信验证码"></el-input>
-            </div>
-          </el-form-item>
-
-            <el-form-item label prop="pass">
-            <div class="import">
-              <img width="15px"  height="15px" style=" margin: 0 10px" src="../../assets/imgs/mima.png" alt/>   
-               <el-input type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="请输入密码，不少于6位"></el-input>           
-              <!-- <el-input v-model="ruleForm.password" placeholder="请输入密码，不少于6位"></el-input> -->
-            </div>
-            <div class="read">
-               <el-checkbox></el-checkbox>我已阅读并同意 <span style="color:#5876F0">《服务协议》</span>及<span style="color:#5876F0">《隐私政策》</span>
-            </div>
-          </el-form-item>
-          <el-form-item >
-            <el-button type="primary" style="width:280px;" @click="submitForm('ruleForm')">注册</el-button>
-          </el-form-item>   
-          <p class="Existing">已有账号 <span style="color:#5876F0">点击注册</span> </p>       
-        </el-form>
-         </div>
+        <div class="n">
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+            <p style="width:280px; text-align: center;font-weight: 600">登录</p>
+            <el-form-item label prop="name">
+              <div class="import">
+                <img
+                  width="15px"
+                  height="15px"
+                  style=" margin: 0 10px"
+                  src="../../assets/imgs/my.png"
+                  alt
+                />
+                <el-input v-model="ruleForm.name" placeholder="请输入您的手机号"></el-input>
+              </div>
+            </el-form-item>
+            <el-form-item prop="pass">
+              <div class="import">
+                <img
+                  width="15px"
+                  height="15px"
+                  style=" margin: 0 10px"
+                  src="../../assets/imgs/my.png"
+                  alt
+                />
+                <el-input type="password" v-model="ruleForm.pass" placeholder="请输入您的密码"></el-input>
+              </div>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" style="width:280px;" @click="submitForm('ruleForm')">登录</el-button>
+            </el-form-item>
+            <p class="Existing">
+              已有账号
+              <span style="color:#5876F0">点击登录</span>
+            </p>
+          </el-form>
+        </div>
+  
       </div>
-      <img src alt />
+      <!-- <img src alt /> -->
     </div>
   </div>
 </template>
@@ -55,43 +49,50 @@
 <script>
 export default {
   data() {
+    //用户名
+    var validatePass = (rule, value, callback) => {
+      var reg = /^\w{11}$/;
+      //   console.log(reg.test(value))
+      if (reg.test(value)) {
+        callback(); //验证通过
+      } else callback(new Error("用户名只能是11位数")); //验证失败
+    };
+    //密码验证规则
+    var validatePwd = (rule, value, callback) => {
+      var reg = /^\w{6,10}$/;
+      if (reg.test(value)) {
+        callback(); //验证通过
+      } else callback(new Error("密码只能是6-10位数字字母下划线")); //验证失败
+    };
+
     return {
       // checked:"",
       ruleForm: {
         name: "",
-        pass: '',
+        pass:"",
+        // pass: '',
+        // checkPass: '',
       },
       rules: {
         name: [
-          { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { validator: validatePass, trigger: "blur" }
         ],
-         pass: [
-            { validator: validatePass, trigger: 'blur' }
-          ],
+         pass: [{ validator: validatePwd, trigger: "blur" }]
       }
     };
-    var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          if (this.ruleForm2.checkPass !== '') {
-            this.$refs.ruleForm2.validateField('checkPass');
-          }
-          callback();
-        }
-      };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+    submitForm() {
+      this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          alert("submit!");
+            this.$router.push('/supersignature')
         } else {
-          console.log("error submit!!");
-          return false;
+          alert("用户名或密码不正确")
         }
       });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
 };
@@ -99,52 +100,66 @@ export default {
 
 <style lang="less" scoped>
 #register {
+   width:100%;
+   height:100%;
   .a {
-    width: 1000px;
-    height: 600px;
+    width:100%;
+    height:100%;
     background: #fff;
-    margin: 0 auto;
+    
+   
   }
   .backdrop {
-    display: flex;
-    justify-content: center;
-    height: 420px;
-    width: 800px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    margin-left: -600px;
+    height: 800px;
+    width: 1200px;
     background-image: url("../../assets/imgs/card.png");
-    background-size: 800px;
+    background-size:1200px;
     background-repeat: no-repeat;
   }
   .import {
     display: flex;
     align-items: center;
   }
-  .demo-ruleForm{
-    margin: 0 auto;
-     width: 280px;
-     height: 370px;
-     background: #fff;
-     border-radius:4% ;
-     margin-top:30px 
-     
+  .n{
+    width: 400px;
+    background: #fff;
+    border-radius: 4%;
+    margin: 150px 400px;
+    display: flex;
+     justify-content: center;
+     align-items: center;
+      box-shadow: 0px 0px 5px #ccc;
   }
-  .read{
+  .demo-ruleForm {
     width: 280px;
-    font-size:10px;
-    margin-left:10px 
+    height: 370px;
+    margin-top:50px 
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
   }
-  .el-form-item{
-    margin-bottom:15px
+  .read {
+    width: 280px;
+    font-size: 10px;
+    margin-left: 10px;
   }
-  .Existing{
+  .el-form-item {
+    margin-bottom: 15px;
+  }
+  .Existing {
     font-size: 10px;
     width: 280px;
-    text-align:center;
+    text-align: center;
     margin: 0;
   }
-  .bb{
-    margin: 0!important;
+  .bb {
+    margin: 0 !important;
   }
-  .el-form-item__error{
+  .el-form-item__error {
     font-size: 8px;
   }
 }

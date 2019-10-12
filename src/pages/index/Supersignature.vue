@@ -96,9 +96,10 @@
               <el-menu-item index="6">异常报警</el-menu-item>
               <el-menu-item index="7">消费记录</el-menu-item>
               <!-- <el-menu-item index="8">其他</el-menu-item> -->
-              
-             
             </el-menu>
+            <div>
+              <router-view></router-view>
+            </div>
           </el-drawer>
         </div>
       </div>
